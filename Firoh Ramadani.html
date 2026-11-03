@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FIROH RAMADANI</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: #030006;
+    color: white;
+    font-family: 'Orbitron', sans-serif;
+    overflow: hidden;
+}
+/* =========================
+   LOADING SCREEN
+========================= */
+
+#loader {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background:
+        radial-gradient(circle at center, #26004d 0%, #08000e 45%, #020003 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 1s ease, visibility 1s ease;
+}
+
+#loader.hide {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.loader-box {
+    width: min(500px, 85%);
+    text-align: center;
+}
+
+.loader-logo {
+    font-size: clamp(35px, 8vw, 70px);
+    font-weight: 900;
+    letter-spacing: 10px;
+    color: #fff;
+    text-shadow:
+        0 0 10px #9d00ff,
+        0 0 30px #9d00ff,
+        0 0 70px #5a00ff;
+    animation: logoPulse 2s infinite alternate;
+}
+
+.loader-sub {
+    margin-top: 10px;
+    font-size: 11px;
+    letter-spacing: 5px;
+    color: #bd63ff;
+}
+.loader-ring {
+    width: 130px;
+    height: 130px;
+    margin: 35px auto;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    border-top-color: #b100ff;
+    border-right-color: #6800ff;
+    box-shadow:
+        0 0 15px #9d00ff,
+        inset 0 0 20px #5b00ff;
+    animation: spin 1s linear infinite;
+    position: relative;
+}
+
+.loader-ring::after {
+    content: "FR";
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-size: 35px;
+    font-weight: 900;
+    color: white;
+    text-shadow: 0 0 20px #b000ff;
+}
+
+.loader-percent {
+    font-size: 25px;
+    margin-bottom: 15px;
+}
+
+.progress {
+    width: 100%;
+    height: 4px;
+    background: #17001f;
+    overflow: hidden;
+    border: 1px solid #4d0070;
+}
+
+.progress-bar {
+    width: 0%;
+    height: 100%;
+    background: #b000ff;
+    box-shadow: 0 0 15px #b000ff;
+}
+
+.loader-status {
+    margin-top: 14px;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: #a85bd3;
+}
+@keyframes spin  {
+    to {transform: rotate(360deg);}
+    
+}
+
+@keyframes logoPulse {
+    from {
+        opacity: .65;
+        text-shadow: 0 0 10px #9d00ff;
+    }
+    to {
+        opacity: 1;
+        text-shadow:
+            0 0 10px #fff,
+            0 0 30px #b000ff,
+            0 0 70px #6800ff;
+    }
+}
+
+/* =========================
+   MAIN
+========================= */
+
+#app {
+    opacity: 0;
+    transition: opacity 1s ease;
+}
+
+#app.ready {
+    opacity: 1;
+}
+
+/* Mouse Lighting */
+
+.mouse-light {
+    position: fixed;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 1;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(
+        circle,
+        rgba(145, 0, 255, .16),
+        rgba(80, 0, 150, .07) 35%,
+        transparent 70%
+    );
+}
+
+/* Background */
+
+.background {
+    position: fixed;
+    inset: 0;
+    z-index: -5;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(105,0,180,.15), transparent 35%),
+        radial-gradient(circle at 80% 70%, rgba(70,0,180,.12), transparent 35%),
+        #030006;
+}
+
+.grid {
+    position: fixed;
+    inset: 0;
+    z-index: -4;
+    opacity: .18;
+    background-image:
+        linear-gradient(rgba(155,0,255,.18) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(155,0,255,.18) 1px, transparent 1px);
+    background-size: 50px 50px;
+    transform: perspective(500px) rotateX(60deg) scale(2);
+    transform-origin: center bottom;
+    animation: gridMove 12s linear infinite;
+}
+@keyframes gridMove {
+    from { transform: perspective(500px) rotateX(60deg) scale(2) translateY(0); }
+    to { transform: perspective(500px) rotateX(60deg) scale(2) translateY(50px); }
+}
+
+/* =========================
+   PARTICLES
+========================= */
+
+#particles {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.particle {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: #bd4dff;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #b000ff;
+    animation: particleFloat linear infinite;
+}
+
+@keyframes particleFloat {
+    from {
+        transform: translateY(110vh);
+        opacity: 0;
+    }
+    15% {
+        opacity: 1;
+    }
+    85% {
+        opacity: 1;
+    }
+    to {
+        transform: translateY(-20vh);
+        opacity: 0;
+    }
+}
+
+/* =========================
+   PAGE SYSTEM
+========================= */
+
+.page {
+    position: fixed;
+    inset: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity .4s ease, visibility .4s ease;
+    z-index: 2;
+}
+
+#page1 {
+    opacity: 1;
+    visibility: visible;
+}
+
+#page2 {
+    visibility: hidden;
+    opacity: 0;
+}
+
+body.next #page1 {
+    opacity: 0;
+    visibility: hidden;
+}
+
+body.next #page2 {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* =========================
+   PAGE 1
+========================= */
+
+.hero {
+    text-align: center;
+    position: relative;
+    z-index: 5;
+    padding: 20px;
+}
+
+.tag {
+    font-size: 10px;
+    letter-spacing: 6px;
+    color: #9e44d1;
+    margin-bottom: 20px;
+}
+
+.hero h1 {
+    font-size: clamp(50px, 12vw, 130px);
+    font-weight: 900;
+    letter-spacing: 12px;
+    color: #fff;
+    text-shadow:
+        0 0 10px #fff,
+        0 0 25px #a500ff,
+        0 0 60px #6900ff,
+        0 0 100px #370080;
+    animation: titleGlitch 4s infinite;
+}
+
+.hero h2 {
+    font-size: clamp(12px, 2vw, 20px);
+    letter-spacing: 8px;
+    color: #a73eff;
+    margin-top: 5px;
+}
+.hero p {
+    max-width: 600px;
+    margin: 25px auto 35px;
+    color: #9d8ba6;
+    line-height: 1.8;
+    font-size: 12px;
+}
+
+.enter-btn {
+    position: relative;
+    padding: 17px 60px;
+    border: 1px solid #a500ff;
+    background: rgba(60,0,90,.18);
+    color: white;
+    font-family: inherit;
+    letter-spacing: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    overflow: hidden;
+    transition: .4s;
+    box-shadow:
+        0 0 10px rgba(160,0,255,.5),
+        inset 0 0 15px rgba(160,0,255,.15);
+}
+
+.enter-btn::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(190,70,255,.5),
+        transparent
+    );
+    transition: .5s;
+}
+
+.enter-btn:hover::before {
+    left: 100%;
+}
+
+.enter-btn:hover {
+    transform: translateY(-5px) scale(1.05);
+    background: #7600a8;
+    box-shadow:
+        0 0 20px #a500ff,
+        0 0 60px rgba(150,0,255,.6);
+}
+/* =========================
+   AVA TRANSITION
+========================= */
+
+#photoTransition {
+    position: fixed;
+    inset: 0;
+    z-index: 9998;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.transition-photo {
+     width: 120px;
+     height: 120px;
+     object-fit: cover;
+     transform: scale(0);
+ }
+ .transition-photo.active {
+     animation: photoExpand 1.2s cubic-bezier(.7,0,.2,1) forwards;
+ }
+ @keyframes photoExpand {
+     0% {
+         transform: scale(0) rotate(-180deg);
+         opacity: 1;
+     }
+     40% {
+         transform: scale(5) rotate(0deg);
+         opacity: 1;
+     }
+     100% {
+         transform: scale(25) rotate(360deg);
+         opacity: 0;
+     }
+ }
+
+/* =========================
+   PAGE 2
+========================= */
+
+.social-container {
+    width: min(900px, 90%);
+    text-align: center;
+    position: relative;
+    z-index: 5;
+}
+
+.social-container .small-title {
+    font-size: 10px;
+    letter-spacing: 6px;
+    color: #9e44d1;
+    margin-bottom: 15px;
+}
+
+.social-container h1 {
+    font-size: clamp(35px, 7vw, 75px);
+    letter-spacing: 8px;
+    text-shadow:
+        0 0 15px #a500ff,
+        0 0 40px #6200a8;
+}
+
+.social-container > p {
+    margin: 20px auto 40px;
+    color: #8f8296;
+    font-size: 11px;
+    max-width: 550px;
+}
+
+.social-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    perspective: 1000px;
+}
+
+.social-card {
+    position: relative;
+    min-height: 160px;
+    padding: 30px;
+    border: 1px solid #42005d;
+    background:
+        linear-gradient(
+            135deg,
+            rgba(80,0,110,.25),
+            rgba(10,0,15,.7)
+        );
+    backdrop-filter: blur(10px);
+    transform-style: preserve-3d;
+    transition: transform .15s ease, border .3s ease, box-shadow .3s ease;
+    overflow: hidden;
+    text-decoration: none;
+    color: white;
+}
+
+.social-card::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(180,0,255,.2),
+        transparent
+    );
+    transform: translateX(-100%);
+    transition: .6s;
+}
+
+.social-card:hover::before {
+    transform: translateX(100%);
+}
+
+.social-card:hover {
+    border-color: #a500ff;
+    box-shadow:
+        0 0 15px rgba(160,0,255,.4),
+        0 0 50px rgba(100,0,180,.2);
+}
+
+.social-icon {
+    font-size: 35px;
+    margin-bottom: 15px;
+    filter: drop-shadow(0 0 10px #a500ff);
+}
+
+.social-card h2 {
+    font-size: 16px;
+    letter-spacing: 3px;
+}
+
+.social-card p {
+    margin-top: 8px;
+    color: #827486;
+    font-size: 9px;
+    letter-spacing: 2px;
+}
+
+.back-btn {
+    margin-top: 35px;
+    background: transparent;
+    border: none;
+    color: #9365a8;
+    font-family: inherit;
+    font-size: 9px;
+    letter-spacing: 3px;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.back-btn:hover {
+    color: #d080ff;
+    text-shadow: 0 0 10px #a500ff;
+}
+/* =========================
+   CORNER HUD
+========================= */
+
+.hud {
+    position: fixed;
+    inset: 20px;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.corner {
+    position: absolute;
+    width: 35px;
+    height: 35px;
+    border-color: #6e00a0;
+}
+
+.c1 {
+    top: 0;
+    left: 0;
+    border-top: 1px solid;
+    border-left: 1px solid;
+}
+
+.c2 {
+    top: 0;
+    right: 0;
+    border-top: 1px solid;
+    border-right: 1px solid;
+}
+
+.c3 {
+    bottom: 0;
+    left: 0;
+    border-bottom: 1px solid;
+    border-left: 1px solid;
+}
+
+.c4 {
+    bottom: 0;
+    right: 0;
+    border-bottom: 1px solid;
+    border-right: 1px solid;
+}
+
+.hud-text {
+    position: absolute;
+    bottom: 15px;
+    left: 45px;
+    font-size: 7px;
+    letter-spacing: 3px;
+    color: #542c63;
+}
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 650px) {
+
+    .hero h1 {
+        letter-spacing: 5px;
+    }
+
+    .hero h2 {
+        letter-spacing: 4px;
+    }
+
+    .social-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .social-card {
+        min-height: 120px;
+        padding: 20px;
+    }
+
+    .social-icon {
+        font-size: 28px;
+    }
+
+    .loader-ring {
+        width: 100px;
+        height: 100px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- =========================
+     LOADING SCREEN
+========================= -->
+
+<div id="loader">
+    <div class="loader-box">
+
+        <div class="loader-logo">FIRADA</div>
+        <div class="loader-sub">ANOMALI UNGU</div>
+
+        <div class="loader-ring"></div>
+
+        <div class="loader-percent">
+            <span id="percent">0</span>%
+        </div>
+
+        <div class="progress">
+            <div class="progress-bar" id="progress"></div>
+        </div>
+
+        <div class="loader-status" id="status">
+            KEPO YA BANG...
+        </div>
+
+    </div>
+</div>
+<!-- =========================
+     PARTICLES
+========================= -->
+
+<div id="particles"></div>
+
+<div class="background"></div>
+<div class="grid"></div>
+
+<div class="mouse-light" id="mouseLight"></div>
+
+
+<!-- =========================
+     HUD
+========================= -->
+
+<div class="hud">
+    <div class="corner c1"></div>
+    <div class="corner c2"></div>
+    <div class="corner c3"></div>
+    <div class="corner c4"></div>
+
+    <div class="hud-text">
+        CREATED BY FIROH RAMADANI
+    </div>
+</div>
+
+
+<!-- =========================
+     AVA TRANSITION
+========================= -->
+
+<div id="photoTransition">
+    <img
+    src="ART FIRADA.png"
+    alt="Foto saya"
+    class="transition-photo"
+    id="myPhoto">
+</div>
+
+
+<!-- =========================
+     APPLICATION
+========================= -->
+
+<div id="app">
+
+    <!-- PAGE 1 -->
+
+    <section class="page" id="page1">
+
+        <div class="hero">
+
+            <div class="tag">
+                💕BELLO GUYS💕
+            </div>
+
+            <h1>FIRADA</h1>
+
+            <p>
+                SANG ANOMALI YANG MENJADI NPC, BELLO SEMUA FIRADA DI SINI.
+            </p>
+
+            <button class="enter-btn" id="enterBtn">
+                KEPOIN AAA
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- PAGE 2 -->
+
+    <section class="page" id="page2">
+
+        <div class="social-container">
+
+            <div class="small-title">
+                💕PENCET GUYS💕
+            </div>
+
+            <h1>SOCIAL MEDIA</h1>
+
+            <p>
+                FOLLOW 🤓🤞
+            </p>
+
+            <div class="social-grid">
+
+                <!-- TIKTOK -->
+                <a
+                    class="social-card"
+                    href="https://www.tiktok.com/@firohramadani?_r=1&_t=ZS-99kQyAwfHi3"
+                >
+                    <div class="social-icon">♪</div>
+                    <h2>TIKTOK</h2>
+                    <p>FOLLOW TIK TOK</p>
+                </a>
+
+
+                <!-- YOUTUBE -->
+                <a
+                    class="social-card"
+                    href="https://youtube.com/@firoh_ramadani?si=otP3-b9UN1wi_ox6"
+                >
+                    <div class="social-icon">▶</div>
+                    <h2>YOUTUBE</h2>
+                    <p>WATCH CHANNEL</p>
+                </a>
+
+
+                <!-- INSTAGRAM -->
+                <a
+                    class="social-card"
+                    href="https://www.instagram.com/firohramadani_23?stkn=MXBndzQzaGhyejZnaA=="
+                >
+                    <div class="social-icon">◎</div>
+                    <h2>INSTAGRAM</h2>
+                    <p>FOLLOW PROFILE</p>
+                </a>
+
+
+                <!-- DISCORD -->
+                <a
+                    class="social-card"
+                    href="https://discord.gg/vM7EtmC9v"
+                >
+                    <div class="social-icon">❦</div>
+                    <h2>DISCORD</h2>
+                    <p>JOIN SERVER</p>
+                </a>
+
+            </div>
+            <button class="back-btn" id="backBtn">
+                ← BACK TO COVER
+            </button>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<script>
+
+/* =========================
+   LOADING SYSTEM
+========================= */
+
+let progress = 0;
+
+const percent = document.getElementById("percent");
+const progressBar = document.getElementById("progress");
+const loader = document.getElementById("loader");
+const app = document.getElementById("app");
+const status = document.getElementById("status");
+
+const loadingMessages = [
+    "KEPOKAN?",
+    "READY...",
+    "INI DIA...",
+    "MENUJU DUNIA ANOMALI...",
+    "BERSIAPLAH F23日...",
+];
+
+let messageIndex = 0;
+
+const loadingInterval = setInterval(() => {
+
+    progress += Math.floor(Math.random() * 4) + 1;
+
+    if (progress >= 100) {
+        progress = 100;
+        clearInterval(loadingInterval);
+
+        setTimeout(() => {
+            loader.classList.add("hide");
+            app.classList.add("ready");
+            document.body.style.overflow = "hidden";
+        }, 700);
+    }
+
+    percent.textContent = progress;
+    progressBar.style.width = progress + "%";
+
+    if (progress % 15 < 5 && messageIndex < loadingMessages.length - 1) {
+        messageIndex++;
+        status.textContent = loadingMessages[messageIndex];
+    }
+
+}, 70);
+
+
+/* =========================
+   PARTICLES
+========================= */
+
+const particleContainer =
+    document.getElementById("particles");
+
+for (let i = 0; i < 90; i++) {
+
+    const particle = document.createElement("div");
+
+    particle.className = "particle";
+
+    particle.style.left =
+        Math.random() * 100 + "%";
+
+    particle.style.animationDuration =
+        (Math.random() * 8 + 5) + "s";
+
+    particle.style.animationDelay =
+        Math.random() * 8 + "s";
+
+    particle.style.opacity =
+        Math.random();
+
+    const size =
+        Math.random() * 3 + 1;
+
+    particle.style.width = size + "px";
+    particle.style.height = size + "px";
+
+    particleContainer.appendChild(particle);
+}
+/* =========================
+   MOUSE LIGHTING
+========================= */
+
+const mouseLight =
+    document.getElementById("mouseLight");
+
+document.addEventListener("mousemove", (e) => {
+
+    mouseLight.style.left = e.clientX + "px";
+    mouseLight.style.top = e.clientY + "px";
+
+});
+
+
+/* =========================
+   ENTER + AVA
+========================= */
+
+const enterBtn =
+    document.getElementById("enterBtn");
+
+const myPhoto =
+    document.getElementById("myPhoto");
+
+enterBtn.addEventListener("click", () => {
+    console.log("KEPOIN AAA diklik!");
+    myPhoto.classList.remove("active");
+
+    // restart animation
+    void myPhoto.offsetWidth;
+
+    myPhoto.classList.add("active");
+
+    setTimeout(() => {
+        document.body.classList.add("next");
+    }, 650);
+
+});
+
+
+/* =========================
+   BACK BUTTON
+========================= */
+
+const backBtn =
+    document.getElementById("backBtn");
+
+backBtn.addEventListener("click", () => {
+
+    document.body.classList.remove("next");
+
+});
+
+
+/* =========================
+   3D CARD EFFECT
+========================= */
+
+const cards =
+    document.querySelectorAll(".social-card");
+
+cards.forEach(card => {
+
+    card.addEventListener("mousemove", (e) => {
+
+        const rect =
+            card.getBoundingClientRect();
+
+        const x =
+            e.clientX - rect.left;
+
+        const y =
+            e.clientY - rect.top;
+
+        const centerX =
+            rect.width / 2;
+
+        const centerY =
+            rect.height / 2;
+
+        const rotateX =
+            ((y - centerY) / centerY) * -8;
+
+        const rotateY =
+            ((x - centerX) / centerX) * 8;
+
+        card.style.transform =
+            `rotateX(${rotateX}deg)
+             rotateY(${rotateY}deg)
+             translateZ(15px)
+             scale(1.03)`;
+
+    });
+
+    card.addEventListener("mouseleave", () => {
+
+        card.style.transform =
+            "rotateX(0deg) rotateY(0deg) translateZ(0) scale(1)";
+
+    });
+
+});
+
+</script>
+
+</body>
+</html>
